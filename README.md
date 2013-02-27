@@ -11,7 +11,7 @@ git .init .
 git add . 
 git commit -m 'Initial app setup.'
 
-Running
+Initial Configuration
 ==============
 pip install -r requirements.txt
 
