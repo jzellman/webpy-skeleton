@@ -16,8 +16,10 @@ Running
 pip install -r requirements.txt
 
 Running the web server 
+====
 python app.py
 
 Running the tests
+====
 python tests.py
 
