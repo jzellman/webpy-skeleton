@@ -9,7 +9,7 @@ Usage
     cd my_sweet_app
     git clone https://github.com/jzellman/webpy-skeleton.git .
     rm -rf .git
-    git .init .
+    git init .
     git add . 
     git commit -m 'Initial app setup.'
 
