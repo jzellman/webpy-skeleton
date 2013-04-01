@@ -36,21 +36,11 @@ $def with (content)
     </div>
 
     <div class="container">
-      $if flash_messages('success'):
-          <div class="alert alert-success">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          $for m in flash_messages('success'):
-              $m <br/>
-          </div>
-      $if flash_messages('error'):
-          <div class="alert alert-error">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          $for m in flash_messages('error'):
-              $m <br/>
-          </div>
+      $:render.flash_messages('success')
+      $:render.flash_messages('error')
 
-          
       $:content
+
       <div class="row pull-right" style="margin-top:3em">
         <p class="muted">
           <small>Version: $app_version() </small>

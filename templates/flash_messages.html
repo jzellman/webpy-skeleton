@@ -1,0 +1,8 @@
+$def with(message_type)
+$code:
+    message = "<br/>".join(flash_messages(message_type))
+$if message:
+    <div class="row alert alert-$message_type">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      $:message
+    </div>
