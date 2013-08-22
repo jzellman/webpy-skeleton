@@ -31,7 +31,8 @@ $def with (content)
      <div class="container">
        $:render('flash_messages', 'success')
        $:render('flash_messages', 'error')
-     </div>
+       
+       $:content
     </div> <!-- /container -->
 
     <script src="/static/js/jquery.js"></script>
