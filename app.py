@@ -3,6 +3,7 @@ from collections import defaultdict
 import web
 
 import config
+import model as m
 
 
 VERSION = "0.0.1"
@@ -22,8 +23,11 @@ if web.config.get('_session') is None:
 else:
     session = web.config._session
 
-def add_flash(group, message):
+
+def flash(group, message):
     session.flash[group].append(message)
+
+
 def flash_messages(group=None):
     if not hasattr(web.ctx, 'flash'):
         web.ctx.flash = session.flash
@@ -33,33 +37,29 @@ def flash_messages(group=None):
     else:
         return web.ctx.flash
 
-# Setup global template functions
-t_globals = dict(
-    datestr=web.datestr,
-    app_version=lambda: VERSION + ' - ' + config.env,
-    flash_messages=flash_messages,
-    )
-
-render_partial = web.template.render('templates/', cache=config.cache,
-                                     globals=t_globals)
-# Allow rendering of partials in partials
-render_partial._keywords['globals']['render'] = render_partial
-
 render = web.template.render('templates/',
                              base='base',
-                             cache=config.cache,
-                             globals=t_globals)
-# Allow rendering of partials
-render._keywords['globals']['render'] = render_partial
+                             cache=config.cache)
+t_globals = web.template.Template.globals
+t_globals['datestr'] = web.datestr
+t_globals['app_version'] = lambda: VERSION + ' - ' + config.env
+t_globals['flash_messages'] = flash_messages
+t_globals['render'] = lambda t, *args: render._template(t)(*args)
+
 
 class Index:
     def GET(self):
+        flash("success", """Welcome! Application code lives in app.py,
+        models in model.py, tests in test.py, and seed data in seed.py.""")
         return render.index()
+
 
 # Set a custom internal error message
 def internalerror():
     msg = """
-    An internal server error occurred. Please try your request again by hitting back on your web browser. You can also <a href="/"> go back to the main page.</a>
+    An internal server error occurred. Please try your request again by
+    hitting back on your web browser. You can also <a href="/"> go back
+     to the main page.</a>
     """
     return web.internalerror(msg)
 
@@ -67,10 +67,10 @@ def internalerror():
 # Setup the application's error handler
 app.internalerror = web.debugerror if web.config.debug else internalerror
 
-if config.email_errors:
-    app.internalerror = web.emailerrors(config.email_errors,
+if config.email_errors.to_address:
+    app.internalerror = web.emailerrors(config.email_errors.to_address,
                                         app.internalerror,
-                                        'server-error@example.com')
+                                        config.email_errors.from_address)
 
 
 # Adds a wsgi callable for uwsgi
