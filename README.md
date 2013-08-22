@@ -23,5 +23,5 @@ Running the web server
 
 Running the tests
 ====
-    python tests.py
+    python test.py
 
