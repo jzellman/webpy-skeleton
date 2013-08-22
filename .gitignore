@@ -35,4 +35,4 @@ nosetests.xml
 .pydevproject
 
 sessions/
-logs/
+logs/*.log
